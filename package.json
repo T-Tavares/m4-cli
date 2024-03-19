@@ -1,0 +1,22 @@
+{
+    "name": "turners-cli",
+    "version": "1.0.0",
+    "description": "Mission Ready - Mission 4 - Tavares => Turners CLI",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {},
+    "author": "T-Tavares",
+    "license": "MIT",
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "commander": "^12.0.0",
+        "dotenv": "^16.4.5",
+        "inquirer": "^9.2.16",
+        "mongoose": "^8.2.1",
+        "table": "^6.8.1"
+    },
+    "bin": {
+        "turners-cli": "./cli.js",
+        "tcli": "./cli.js"
+    }
+}
