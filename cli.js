@@ -20,20 +20,15 @@
 
 // --------------------------- IMPORTS ---------------------------- //
 
-import {carsList, carsObjList, hardReset, addCar} from './src/controllers/carsControllers.js';
-import {addCarPrompts} from './src/helpers/carsHelpers.js';
-import {dangerLog, warningLog, okLog} from './src/helpers/setupHelpers.js';
-
+import {carsList, carsObjList, hardReset, addCar, deleteCar} from './src/controllers/carsControllers.js';
+import {warningMsg, devTempMsg, descriptionMsg} from './src/helpers/helpers.js';
 import mongoose from 'mongoose';
-import inquirer from 'inquirer';
 import {Command} from 'commander';
-import chalk from 'chalk';
 
 // ---------------------------- SETUP ----------------------------- //
 
-const descriptionText = ``;
 const program = new Command();
-program.version('0.0.0').description('Turners Cars CLI');
+program.version('0.0.0').description(descriptionMsg());
 
 mongoose.connect('mongodb://localhost:27017/turnersDB');
 mongoose.connection.on('error', err => console.error('MONGOOSE ERROR :::', err));
@@ -45,9 +40,9 @@ mongoose.connection.on('error', err => console.error('MONGOOSE ERROR :::', err))
 // --------------------------- RESET DB --------------------------- //
 
 program
-    .command(dangerLog('hard-reset'))
+    .command('hard-reset')
     .alias('hr')
-    .description(dangerLog('Reset Cars DB to a clean starting point.'))
+    .description(`${warningMsg()}${warningMsg('Reset Cars DB to a clean starting point.')}${devTempMsg()}\n`)
     .action(hardReset);
 
 // ---------------------------------------------------------------- //
@@ -59,7 +54,7 @@ program
 program
     .command('cars-obj-list')
     .alias('col')
-    .description(`Get's a list of available Turners cars on stock as an array of objects.`)
+    .description(`Get's a list of available Turners cars on stock as an array of objects.\n\n`)
     .action(carsObjList);
 
 // ------------------------ GET CARS LIST  ------------------------ //
@@ -67,7 +62,7 @@ program
 program
     .command('cars-list')
     .alias('cl')
-    .description(`Get's a list of available Turners cars on stock.`)
+    .description(`Get's a list of available Turners cars on stock.\n\n`)
     .action(carsList);
 
 // --------------------------- ADD CAR ---------------------------- //
@@ -76,10 +71,28 @@ program
     .command('add-car')
     .alias('add')
     .alias('a')
-    .description(`Reset Cars Database Collection to a clean starting point. This is a dev tool auxiliate on testing`)
-    .action(() => inquirer.prompt(addCarPrompts).then(answers => addCar(answers)));
+    .description(`Add new car to DB. Asks for user inputs.\n\n`)
+    .action(() => addCar(true));
 
 // -------------------------- DELETE CAR -------------------------- //
+
+program
+    .command('delete-car')
+    .requiredOption('-t, --type', `Choose "id" to Delete car by ID or "model" to Delete car by MODEL / NAME`)
+    .alias('delete')
+    .alias('d')
+    .description(
+        `${warningMsg()}${warningMsg(
+            'Choose "id" to Delete car by ID or "model" to Delete car by MODEL / NAME'
+        )}For more information on command options:\ntcli d -h\n\n`
+    )
+    .action(() => deleteCar(true, program.args.slice(-1)[0]));
+
+/* 
+    requiredOption => program.args returns an array with the flags and passed argument.
+    slice and [0] is used to retrieve the raw user passed argument
+*/
+
 // ----------------------- UPDATE CAR ENTRY ----------------------- //
 
 // ---------------------------------------------------------------- //
