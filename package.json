@@ -1,7 +1,7 @@
 {
-    "name": "turners-cli",
+    "name": "turners-cli-tavares",
     "version": "1.0.0",
-    "description": "Mission Ready - Mission 4 - Tavares => Turners CLI",
+    "description": "Mission Ready - Mission 4 - Tavares => Turners CLI\nThis project is part of my studies on Mission Ready. It is a CLI to manage and handle a database.\nThe CLI has to be used on a frontend query to give alternatives/similars cars prompted that are in our database.",
     "main": "index.js",
     "type": "module",
     "scripts": {},
@@ -13,7 +13,8 @@
         "dotenv": "^16.4.5",
         "inquirer": "^9.2.16",
         "mongoose": "^8.2.1",
-        "table": "^6.8.1"
+        "table": "^6.8.1",
+        "turners-cli-tavares": "^1.0.0"
     },
     "bin": {
         "turners-cli": "./cli.js",

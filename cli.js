@@ -93,8 +93,6 @@ program
     slice and [0] is used to retrieve the raw user passed argument
 */
 
-// ----------------------- UPDATE CAR ENTRY ----------------------- //
-
 // ---------------------------------------------------------------- //
 
 program.parse();

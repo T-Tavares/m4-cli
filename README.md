@@ -1,27 +1,66 @@
-Mission Objective: In this mission, you will enhance your existing API (created for Mission 02) by integrating MongoDB.
-
-### Task 5: Install MongoDB Locally
-
-Installation: Install MongoDB and MongoDB Compass locally. You will create and manage your database locally; please do not use Mongo Atlas.
-
--   Required: Follow the MongoDB local installation guide https://www.mongodb.com/docs/manual/administration/install-community/ .
-
--   Required: Install MongoDB Compass using the instructions found https://www.mongodb.com/docs/compass/current/install/ .
-
--   Recommended: If you're new to MongoDB, you can start with the MongoDB Intro https://www.mongodb.com/basics/get-started .
-
-### Task 6: Seed Cars Data into MongoDB
+# Mission Ready - Mission 4 CLI
 
 Data Management: Develop a command-line interface (CLI) tool to seed data into your local MongoDB database or delete data from it. Ensure that this tool is source-controlled and includes the seed data. Team members should be able to seed data by cloning the repository.
 
--   Required: Learn how to build a CLI tool in Node.js by following this guide https://blog.logrocket.com/creating-a-cli-tool-with-node-js/ .
+# About
 
--   Recommended: Watch this video tutorial https://youtu.be/v2GKt39-LPA?si=jSXuOUfZSYggzzGp for additional insights.
+This project is part of my studies on Mission Ready. It is a CLI to manage and handle a database.
+The CLI has to be used on a frontend query to give alternatives/similars cars prompted that are in our database."
 
-### Task 7: Display Similar Cars from Your Stock
+IMPORTANT => For learning purposes, I am using a local mongoDB database.
 
-API Enhancement: Modify your Mission 02 API to retrieve cars that match a specified search criteria from your MongoDB instance. You may optionally create a frontend page that allows users to upload cars and view matched cars.
+# Install
 
--   Recommended: Understand the basics of using Mongoose with MongoDB through this video tutorial https://youtu.be/DZBGEVgL2eE?si=8Bavpy9XdhqR5tSQ .
+If you're using any recent version of NPM you can install locally and run commands with npx
 
--   Recommended: Learn about CRUD operations with Mongoose from this tutorial https://www.digitalocean.com/community/tutorials/nodejs-crud-operations-mongoose-mongodb-atlas .
+    npm install turners-cli-tavares
+
+Optionally, you can install globally and there's no need to use npx
+
+    npm install turners-cli-tabares -g
+
+# Commands and Usage
+
+The way to access the CLI is:
+
+    npx turners-cli | npx tcli
+
+For info and list of commands:
+
+    npx turners-cli --help | npx tcli -h
+
+Any of the following command with the flag of -h will give more details on the command
+
+    npx tcli d -h
+    npx tcli a -h
+    npx tcli cl -
+    ...
+
+For now there's a dev command to help me test and reset my db to a clean point. This command will add 50 cars entries to the DB.
+
+    npx turners-cli hard-reset | npx tcli hr
+
+To log a list of the cars on the db on a table format:
+
+    npx turners-cli cars-list | npx tcli cl
+
+To log a list of cars on the db as Javascript Objects / JSON:
+
+    npx turners-cli cars-obj-list | npx tcli col
+
+To add a single entry manually:
+
+    npx turners-cli add-car | npx tcli a
+
+To delete a single entry manually:
+This command MUST have a arg of type passed. It'll choose if you want to delete it by ID or model/name.
+The way it works is through a mongoose search. It'll aske you to pass a query or an id depending on which flag you pass.
+In case of multiple entries for the model flag you'll get a list of the duplicates logged and be asked to pick the id of
+the one you want to delete.
+
+    npx turners-cli delete-car | npx tcli d <type> id | model
+
+Try
+
+    npx tcli d -t model
+    npx tcli d -t id

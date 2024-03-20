@@ -178,3 +178,6 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
 };
 
 // ----------------------- UPDATE CAR ENTRY ----------------------- //
+
+// --------------------- QUERY FOR SPECIFICS ---------------------- //
+// --------------------- MODEL / YEAR / PRICE --------------------- //
