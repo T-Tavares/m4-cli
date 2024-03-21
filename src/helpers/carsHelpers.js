@@ -35,6 +35,15 @@ export const deleteCarPrompt = type => [
     },
 ];
 
+// ---------------------- QUERY CAR PROMPTS ----------------------- //
+export const queryCarPrompt = type => [
+    {
+        type: 'input',
+        name: type,
+        message: `Please provide us with the ${type} you with to search on our DB.`,
+    },
+];
+
 // ---------------------------------------------------------------- //
 // ---------------------- DATABASE INIT DATA ---------------------- //
 // ---------------------------------------------------------------- //
@@ -257,8 +266,8 @@ export const carsTableHeaders = [
 export const carsTableConfig = {
     spanningCells: [{col: 0, row: 0, colSpan: 4, alignment: 'center'}],
     columnDefault: {
-        paddingLeft: 5,
-        paddingRight: 5,
+        paddingLeft: 3,
+        paddingRight: 3,
     },
     columns: [
         {alignment: 'left', paddingLeft: 2},
@@ -266,6 +275,7 @@ export const carsTableConfig = {
         {alignment: 'center'},
         {alignment: 'right', paddingRight: 2},
     ],
+
     border: {
         topBody: `─`,
         topJoin: `┬`,

@@ -20,8 +20,13 @@
 
 // --------------------------- IMPORTS ---------------------------- //
 
-import {carsList, carsObjList, hardReset, addCar, deleteCar} from './src/controllers/carsControllers.js';
+import {deleteCar} from './src/controllers/carsControllers/deleteCarsCtrl.js';
+import {addCar} from './src/controllers/carsControllers/addCarsCtrl.js';
+import {hardReset, carsObjList} from './src/controllers/carsControllers/devCarsCtrl.js';
+import {carsList, queryCarBy} from './src/controllers/carsControllers/queryCarsCtrl.js';
+
 import {warningMsg, devTempMsg, descriptionMsg} from './src/helpers/helpers.js';
+
 import mongoose from 'mongoose';
 import {Command} from 'commander';
 
@@ -55,7 +60,7 @@ program
     .command('cars-obj-list')
     .alias('col')
     .description(`Get's a list of available Turners cars on stock as an array of objects.\n\n`)
-    .action(carsObjList);
+    .action(() => carsObjList(true));
 
 // ------------------------ GET CARS LIST  ------------------------ //
 
@@ -63,7 +68,17 @@ program
     .command('cars-list')
     .alias('cl')
     .description(`Get's a list of available Turners cars on stock.\n\n`)
-    .action(carsList);
+    .action(() => carsList(true));
+
+// ----------------------- QUERY CARS LIST ------------------------- //
+
+program
+    .command('searchBy')
+    .requiredOption('-t, --type', `Chose either:\n    id\n    model\n   year\n  price\n`)
+    .alias('search')
+    .alias('s')
+    .description(`Search for Cars based on condition / search type.\n\n`)
+    .action(() => queryCarBy(true));
 
 // --------------------------- ADD CAR ---------------------------- //
 

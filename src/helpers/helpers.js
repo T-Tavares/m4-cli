@@ -49,5 +49,3 @@ export const descriptionMsg = () => {
     const header = table(descriptionText, options);
     return `${header}\nThis project is a MVP for a CLI to access and manage TurnersCars Database.`;
 };
-
-export const cliReturn = cli => cli && process.exit();

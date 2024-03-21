@@ -1,76 +1,8 @@
-import {CarsModel, CostumersModel} from '../models/mongoModels.js';
-import {carsInitDB, addCarPrompt, deleteCarPrompt, getCarsTableFor} from '../helpers/carsHelpers.js';
-import {warningMsg, successMsg, failMsg, noMatchesMsg, cliReturn} from '../helpers/helpers.js';
+import {CarsModel} from '../../models/mongoModels.js';
+import {deleteCarPrompt, getCarsTableFor} from '../helpers/carsHelpers.js';
+import {warningMsg, successMsg, failMsg, noMatchesMsg} from '../helpers/helpers.js';
 import inquirer from 'inquirer';
 
-// ---------------------------------------------------------------- //
-// ------------------------ DEV FUNCTIONS ------------------------- //
-// ---------------------------------------------------------------- //
-
-/* 
-    Those functions aim to help on the initial tests while building the CLI
-
-    Things like resets and initializers were put into functions so devs
-    can freely mess up the database and reset to readable version with a 
-    a single command.
-*/
-
-// --------------------------- RESET DB --------------------------- //
-
-export const hardReset = async () => {
-    const deletedDBInfo = await CarsModel.deleteMany({});
-    console.log('Collection cleared : turners-cars\nDev Report::.\n', deletedDBInfo);
-
-    const addedDBInfo = await CarsModel.insertMany(carsInitDB);
-    console.log('Collection Initialised : turners-cars\nDev Report::.\n', addedDBInfo);
-
-    process.exit();
-};
-
-// ---------------------------------------------------------------- //
-// --------------------------- CARS CLI --------------------------- //
-// ---------------------------------------------------------------- //
-
-// ------------------- GET CARS LIST AS OBJECTS ------------------- //
-
-export const carsObjList = async () => {
-    const objList = await CarsModel.find({});
-    console.log(objList);
-    process.exit();
-};
-
-// ------------------------ GET CARS LIST  ------------------------ //
-
-export const carsList = async () => {
-    const list = await CarsModel.find({});
-    const carsTable = getCarsTableFor('Cars on stock', list);
-    console.log(carsTable);
-    process.exit();
-};
-
-// --------------------------- ADD CAR ---------------------------- //
-
-const addCarPromptFunc = async () => await inquirer.prompt(addCarPrompt);
-
-export const addCar = async (cli = false, carObj) => {
-    if (cli) carObj = await addCarPromptFunc(); // Get's carObj (model, year and price) from the cli interface.
-    if (!carObj) console.log(failMsg('Something went wront. We could not get the car info to upload on our DB'));
-
-    const {model, year, price} = carObj;
-
-    const newCarObj = {
-        model,
-        year: +year,
-        price: +price,
-    };
-
-    const addedCar = await CarsModel.create(newCarObj);
-    const addedCarTable = getCarsTableFor('Car Added to DB', addedCar);
-    console.log(addedCarTable);
-    console.log(successMsg());
-
-    return cliReturn(cli);
-};
 // -------------------------- DELETE CAR -------------------------- //
 
 const deleteCarPromptFunc = async identifier => await inquirer.prompt(deleteCarPrompt(identifier));
@@ -82,7 +14,8 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
         console.log(`--type MUST be "id" or "model" please try again.`);
         console.log(type);
 
-        return cliReturn(cli);
+        if (cli) process.exit();
+        return;
     }
 
     /*
@@ -94,7 +27,7 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
     // ---------------------------------------------------------------- //
 
     if (type === 'model') {
-        carIdentifierObj = await deleteCarPromptFunc(type);
+        if (cli) carIdentifierObj = await deleteCarPromptFunc(type);
 
         // ----- REBUILD CARIDENTIFIEROBJ AS REGEX FOR A BROAD SEARCH ----- //
 
@@ -108,7 +41,8 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
 
         if (carSearch.length === 0) {
             console.log(noMatchesMsg());
-            return cliReturn(cli);
+            if (cli) process.exit();
+            return;
         }
 
         // ------------------ HANDLING DUPLICATE RESULTS ------------------ //
@@ -123,6 +57,8 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
             const carIdentifierID = await deleteCarPromptFunc('id');
             const deletedCar = await CarsModel.findByIdAndDelete(carIdentifierID.id);
             const deletedCarTable = getCarsTableFor('Car Deleted from DB', deletedCar);
+
+            // TODO fail message on deletion error
 
             console.log(deletedCarTable);
             console.log(successMsg());
@@ -155,7 +91,8 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
         // GUARD CLAUSE 1
         if (carIdentifierID.id.length !== 24) {
             console.log(noMatchesMsg());
-            return cliReturn(cli);
+            if (cli) process.exit();
+            return;
         }
 
         // FIND AND DELETE SEARCH
@@ -164,7 +101,8 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
         // GUARD CLAUSE 2
         if (deletedCar === null) {
             console.log(noMatchesMsg());
-            return cliReturn(cli);
+            if (cli) process.exit();
+            return;
         }
 
         // If all works return a table with the deleted car.
@@ -174,10 +112,6 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
         console.log(successMsg());
     }
 
-    return cliReturn(cli);
+    if (cli) process.exit();
+    return;
 };
-
-// ----------------------- UPDATE CAR ENTRY ----------------------- //
-
-// --------------------- QUERY FOR SPECIFICS ---------------------- //
-// --------------------- MODEL / YEAR / PRICE --------------------- //
