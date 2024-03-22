@@ -13,8 +13,7 @@
         "dotenv": "^16.4.5",
         "inquirer": "^9.2.16",
         "mongoose": "^8.2.1",
-        "table": "^6.8.1",
-        "turners-cli-tavares": "^1.0.0"
+        "table": "^6.8.1"
     },
     "bin": {
         "turners-cli": "./cli.js",

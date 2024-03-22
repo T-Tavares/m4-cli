@@ -73,12 +73,17 @@ program
 // ----------------------- QUERY CARS LIST ------------------------- //
 
 program
-    .command('searchBy')
-    .requiredOption('-t, --type', `Chose either:\n    id\n    model\n   year\n  price\n`)
-    .alias('search')
+    .command('search')
+    .requiredOption('-t, --type', `Chose either:\n    id\n    model\n`)
     .alias('s')
-    .description(`Search for Cars based on condition / search type.\n\n`)
-    .action(() => queryCarBy(true));
+    .description(
+        `Mandatory Options:\n-t | --type\n-t | --type: Choose "id" to Query car by ID or "model" to Query car by MODEL / NAME'\n\nUsage: \ntcli s -t model\ntcli s -t id\n\n`
+    )
+    .action(() => queryCarBy(true, program.args.slice(-1)[0]));
+/* 
+    program.args returns an array with the flags and passed argument.
+    slice and [0] is used to retrieve the raw user passed argument
+*/
 
 // --------------------------- ADD CAR ---------------------------- //
 
@@ -97,14 +102,11 @@ program
     .alias('delete')
     .alias('d')
     .description(
-        `${warningMsg()}${warningMsg(
-            'Choose "id" to Delete car by ID or "model" to Delete car by MODEL / NAME'
-        )}For more information on command options:\ntcli d -h\n\n`
+        `${warningMsg()}Mandatory Options:\n-t | --type\n-t | --type: Choose "id" to Delete car by ID or "model" to Delete car by MODEL / NAME'\n\nUsage: \ntcli d -t model\ntcli d -t id\n\n`
     )
     .action(() => deleteCar(true, program.args.slice(-1)[0]));
-
 /* 
-    requiredOption => program.args returns an array with the flags and passed argument.
+    program.args returns an array with the flags and passed argument.
     slice and [0] is used to retrieve the raw user passed argument
 */
 

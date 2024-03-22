@@ -1,15 +1,18 @@
 import {CarsModel} from '../../models/mongoModels.js';
-import {deleteCarPrompt, getCarsTableFor} from '../helpers/carsHelpers.js';
-import {warningMsg, successMsg, failMsg, noMatchesMsg} from '../helpers/helpers.js';
+import {deleteCarPrompt} from '../../helpers/prompts.js';
+import {warningMsg, successMsg, noMatchesMsg} from '../../helpers/helpers.js';
+import {getCarsTableFor} from '../../helpers/carsHelpers.js';
 import inquirer from 'inquirer';
 
+// ---------------------------------------------------------------- //
 // -------------------------- DELETE CAR -------------------------- //
+// ---------------------------------------------------------------- //
 
 const deleteCarPromptFunc = async identifier => await inquirer.prompt(deleteCarPrompt(identifier));
 
 export const deleteCar = async (cli = false, type, carIdentifierObj) => {
     // ------------------- HANDLING TYPE ARGUMENT  -------------------- //
-
+    let deletedCar;
     if (type !== 'id' && type !== 'model') {
         console.log(`--type MUST be "id" or "model" please try again.`);
         console.log(type);
@@ -55,7 +58,7 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
             console.log(`${warningMsg(`Two or more entries were found for ${carIdentifierObj[objKey]}`)}`);
 
             const carIdentifierID = await deleteCarPromptFunc('id');
-            const deletedCar = await CarsModel.findByIdAndDelete(carIdentifierID.id);
+            deletedCar = await CarsModel.findByIdAndDelete(carIdentifierID.id);
             const deletedCarTable = getCarsTableFor('Car Deleted from DB', deletedCar);
 
             // TODO fail message on deletion error
@@ -68,8 +71,12 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
             const deletedCar = await CarsModel.findOneAndDelete(carSearchRegex);
             const deletedCarTable = getCarsTableFor('Car Deleted from DB', deletedCar);
 
-            console.log(deletedCarTable);
-            console.log(successMsg());
+            if (cli) {
+                console.log(deletedCarTable);
+                console.log(successMsg());
+            } else {
+                return deletedCar;
+            }
         }
     }
 
@@ -96,7 +103,7 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
         }
 
         // FIND AND DELETE SEARCH
-        const deletedCar = await CarsModel.findOneAndDelete({_id: carIdentifierID.id});
+        deletedCar = await CarsModel.findOneAndDelete({_id: carIdentifierID.id});
 
         // GUARD CLAUSE 2
         if (deletedCar === null) {
@@ -108,8 +115,10 @@ export const deleteCar = async (cli = false, type, carIdentifierObj) => {
         // If all works return a table with the deleted car.
         const deletedCarTable = getCarsTableFor('Car Deleted from DB', deletedCar);
 
-        console.log(deletedCarTable);
-        console.log(successMsg());
+        if (cli) {
+            console.log(deletedCarTable);
+            console.log(successMsg());
+        }
     }
 
     if (cli) process.exit();

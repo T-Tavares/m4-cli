@@ -21,6 +21,8 @@ Optionally, you can install globally and there's no need to use npx
 
 # Commands and Usage
 
+## Basics
+
 The way to access the CLI is:
 
     npx turners-cli | npx tcli
@@ -40,6 +42,8 @@ For now there's a dev command to help me test and reset my db to a clean point. 
 
     npx turners-cli hard-reset | npx tcli hr
 
+## Search / Query
+
 To log a list of the cars on the db on a table format:
 
     npx turners-cli cars-list | npx tcli cl
@@ -48,9 +52,19 @@ To log a list of cars on the db as Javascript Objects / JSON:
 
     npx turners-cli cars-obj-list | npx tcli col
 
+To search for cars:
+This command MUST have a arg of type passed. It'll choose if you want to search it by ID or model/name.
+The way it works is through a mongoose search. It'll aske you to pass a query or an id depending on which flag you pass.
+
+    npx turners-cli search <type> | npx tcli s <type> id | model
+
+## Add to DB
+
 To add a single entry manually:
 
     npx turners-cli add-car | npx tcli a
+
+## Delete from DB
 
 To delete a single entry manually:
 This command MUST have a arg of type passed. It'll choose if you want to delete it by ID or model/name.

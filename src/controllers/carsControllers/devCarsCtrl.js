@@ -1,9 +1,9 @@
-import {CarsModel, CostumersModel} from '../models/mongoModels.js';
-import {carsInitDB, addCarPrompt, deleteCarPrompt, getCarsTableFor} from '../helpers/carsHelpers.js';
-import {warningMsg, successMsg, failMsg, noMatchesMsg, cliReturn} from '../helpers/helpers.js';
-import inquirer from 'inquirer';
+import {CarsModel} from '../../models/mongoModels.js';
+import {carsInitDB} from '../../helpers/carsHelpers.js';
 
+// ---------------------------------------------------------------- //
 // ------------------- GET CARS LIST AS OBJECTS ------------------- //
+// ---------------------------------------------------------------- //
 
 export const carsObjList = async (cli = false) => {
     const objList = await CarsModel.find({});
@@ -13,7 +13,9 @@ export const carsObjList = async (cli = false) => {
     return;
 };
 
+// ---------------------------------------------------------------- //
 // --------------------------- RESET DB --------------------------- //
+// ---------------------------------------------------------------- //
 
 export const hardReset = async (cli = false) => {
     const deletedDBInfo = await CarsModel.deleteMany({});

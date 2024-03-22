@@ -1,11 +1,14 @@
-import {CarsModel} from '../models/mongoModels.js';
-import {addCarPrompt, getCarsTableFor} from '../helpers/carsHelpers.js';
-import {successMsg, failMsg} from '../helpers/helpers.js';
+import {CarsModel} from '../../models/mongoModels.js';
+import {getCarsTableFor} from '../../helpers/carsHelpers.js';
+import {addCarPrompt} from '../../helpers/prompts.js';
+import {successMsg, failMsg} from '../../helpers/helpers.js';
 import inquirer from 'inquirer';
 
-// ----------------------- ADD CAR FUNCTION ----------------------- //
+// ---------------------------------------------------------------- //
+// --------------------------- ADD CAR ---------------------------- //
+// ---------------------------------------------------------------- //
 
-const addCarPromptFunc = async () => await inquirer.prompt(addCarPrompt);
+const addCarPromptFunc = async () => await inquirer.prompt(addCarPrompt());
 
 export const addCar = async (cli = false, carObj) => {
     if (cli) carObj = await addCarPromptFunc(); // Get's carObj (model, year and price) from the cli interface.
@@ -21,9 +24,12 @@ export const addCar = async (cli = false, carObj) => {
 
     const addedCar = await CarsModel.create(newCarObj);
     const addedCarTable = getCarsTableFor('Car Added to DB', addedCar);
-    console.log(addedCarTable);
-    console.log(successMsg());
 
-    if (cli) process.exit();
-    return;
+    if (cli) {
+        console.log(addedCarTable);
+        console.log(successMsg());
+        process.exit();
+    }
+
+    return addedCar;
 };

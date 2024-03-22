@@ -1,10 +1,13 @@
-import {CarsModel, CostumersModel} from '../models/mongoModels.js';
-import {queryCarPrompt} from '../../helpers/carsHelpers.js';
-import {carsInitDB, addCarPrompt, deleteCarPrompt, getCarsTableFor} from '../helpers/carsHelpers.js';
-import {warningMsg, successMsg, failMsg, noMatchesMsg} from '../helpers/helpers.js';
+import {CarsModel} from '../../models/mongoModels.js';
+import {getCarsTableFor} from '../../helpers/carsHelpers.js';
+import {queryCarPrompt} from '../../helpers/prompts.js';
 import inquirer from 'inquirer';
 
-// ------------------------ GET CARS LIST  ------------------------ //
+import mongoose from 'mongoose';
+
+// ---------------------------------------------------------------- //
+// ------------------------ GET CARS LIST ------------------------- //
+// ---------------------------------------------------------------- //
 
 export const carsList = async (cli = false) => {
     const list = await CarsModel.find({});
@@ -15,21 +18,48 @@ export const carsList = async (cli = false) => {
     return;
 };
 
+// ---------------------------------------------------------------- //
 // -------------------- GET QUERY SEARCH LIST --------------------- //
+// ---------------------------------------------------------------- //
 
 const queryCarByPromptFunc = async type => await inquirer.prompt(queryCarPrompt(type));
 
-export const queryCarBy = async (cli = false, queryType = 'model', query) => {
-    const queryTypeCheckArr = ['id', 'model', 'year', 'price'];
+export const queryCarBy = async (cli = false, queryType, query) => {
+    // ------------------- HANDLING TYPE ARGUMENT  -------------------- //
+
+    // TODO - Break this function into 4 => one for each type. Build this one will make it hard to read and maintain.
+
+    // !As per now year and price will not work because they need a different searching logic and methods on mongoose/mongoDB
+
+    // const queryTypeCheckArr = ['id', 'model', 'year', 'price'];
+    const queryTypeCheckArr = ['id', 'model'];
+
     if (!queryTypeCheckArr.includes(queryType)) {
+        console.log(`--type MUST be 'id' or 'model'. Please try again.`);
         if (cli) process.exit();
         return;
     }
 
-    if (cli) query = queryCarByPromptFunc(queryType);
+    // -------------------- CONVERT QUERY TO REGEX -------------------- //
+    let regexQuery;
 
-    const searchResults = await CarsModel.find({[queryType]: query});
-    const searchTable = getCarsTableFor(`Search Results for =>  ${queryType}: ${query}`, searchResults);
+    if (cli) {
+        // CLI QUERY REGEX CONVERSION
+        query = await queryCarByPromptFunc(queryType);
+        regexQuery = {$regex: `${query[queryType]}`, $options: 'i'};
+    } else {
+        // FUNC QUERY REGEX CONVERSION
+        regexQuery = {$regex: `${query}`, $options: 'i'};
+    }
+
+    const regexSearch = {[queryType]: regexQuery};
+
+    // ------------------------- RETURN TABLE ------------------------- //
+    const searchResults = await CarsModel.find(regexSearch);
+    const searchTable = getCarsTableFor(
+        `Search Results for =>  ${queryType}: ${cli ? query.model : query}`,
+        searchResults
+    );
     console.log(searchTable);
 
     if (cli) process.exit();
