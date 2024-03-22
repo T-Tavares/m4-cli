@@ -1,12 +1,16 @@
 {
     "name": "turners-cli-tavares",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "Mission Ready - Mission 4 - Tavares => Turners CLI\nThis project is part of my studies on Mission Ready. It is a CLI to manage and handle a database.\nThe CLI has to be used on a frontend query to give alternatives/similars cars prompted that are in our database.",
     "main": "index.js",
     "type": "module",
     "scripts": {},
     "author": "T-Tavares",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/T-Tavares/m4-cli"
+    },
     "dependencies": {
         "chalk": "^5.3.0",
         "commander": "^12.0.0",
